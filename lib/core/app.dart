@@ -1,5 +1,7 @@
 import 'package:clean_arquitecture_definitive/data/datasources/remote/pokemon_remote_data_source.dart';
+import 'package:clean_arquitecture_definitive/data/repositories/pokemon_repository_impl.dart';
 import 'package:clean_arquitecture_definitive/presentation/state/bloc/pokemon_bloc.dart';
+import 'package:clean_arquitecture_definitive/presentation/state/bloc/service_locator.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,7 +15,8 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<PokemonBloc>(
-          create: (context) => PokemonBloc(PokemonRemoteDataSourceImpl(Dio()))..add(GetPokemonEvent(pokemonNumber: "1"),),
+          // create: (context) => PokemonBloc(PokemonRepositoryImpl(PokemonRemoteDataSourceImpl(Dio())))..add(GetPokemonEvent(pokemonNumber: "2"),),
+          create: (context) => getIt<PokemonBloc>()..add(GetPokemonEvent(pokemonNumber: "2"),),
           lazy: false,
           )
       ],
@@ -34,8 +37,8 @@ class _MaterialWidget extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Material App'),
         ),
-        body: const Center(
-          child: Text('Hello World'),
+        body:  Center(
+          child: Text("${context.select(( PokemonBloc value) => value.state.activePokemon?.name)}"),
         ),
       ),
     );
